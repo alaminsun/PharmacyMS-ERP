@@ -1,0 +1,41 @@
+
+# Angular / Node.js
+node_modules/
+.angular/
+dist/
+coverage/
+.npm/
+.env
+.env.*
+!.env.example
+
+# .NET build files
+[Bb]in/
+[Oo]bj/
+.vs/
+.vscode/
+*.user
+*.suo
+
+# Sensitive configurations
+**/appsettings.Development.json
+**/appsettings.Production.json
+*.publishsettings
+*.pubxml
+*.pubxml.user
+**/Properties/PublishProfiles/
+
+# Certificates and keys
+*.pfx
+*.p12
+*.key
+*.pem
+
+# Logs and temporary files
+logs/
+*.log
+*.tmp
+
+# OS files
+.DS_Store
+Thumbs.db
