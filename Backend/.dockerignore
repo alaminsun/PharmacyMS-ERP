@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+.vs/
+.git/
+**/appsettings.Development.json
+**/appsettings.Production.json
+**/*.publishsettings
+**/Properties/PublishProfiles/
+**/*.pfx
+**/*.pem
+**/*.key
