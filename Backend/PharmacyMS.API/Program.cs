@@ -90,9 +90,13 @@ var runProductionBootstrap =
 
 if (app.Environment.IsDevelopment() || runProductionBootstrap)
 {
+    app.Logger.LogInformation("Admin bootstrap execution started.");
+
     await AdminBootstrap.EnsureAsync(
         app.Services,
         app.Configuration);
+
+    app.Logger.LogInformation("Admin bootstrap execution completed.");
 }
 
 app.Run();
