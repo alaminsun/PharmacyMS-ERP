@@ -81,8 +81,19 @@ app.MapGet("/api/health/ready",async(ApplicationDbContext db,CancellationToken c
     await db.Database.CanConnectAsync(ct) ? Results.Ok(new{database="ready"}) : Results.Problem("Database unavailable",statusCode:503)).AllowAnonymous();
 
 // No EnsureCreated/Migrate on startup. Use EF migrations explicitly (see SETUP_BN.md).
-if(app.Environment.IsDevelopment())
-    await AdminBootstrap.EnsureAsync(app.Services,app.Configuration);
+//if(app.Environment.IsDevelopment())
+//    await AdminBootstrap.EnsureAsync(app.Services,app.Configuration);
+// Allow one-time Admin Bootstrap in Production only when explicitly enabled.
+var runProductionBootstrap =
+    app.Environment.IsProduction() &&
+    app.Configuration.GetValue<bool>("Bootstrap:RunOnce");
+
+if (app.Environment.IsDevelopment() || runProductionBootstrap)
+{
+    await AdminBootstrap.EnsureAsync(
+        app.Services,
+        app.Configuration);
+}
 
 app.Run();
 public partial class Program { }
