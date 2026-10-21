@@ -27,9 +27,22 @@ public static class AdminBootstrap
         if (user is null)
         {
             user=new ApplicationUser{UserName=email,Email=email,EmailConfirmed=true,IsActive=true};
+
             var created=await users.CreateAsync(user,password);
-            if(!created.Succeeded) throw new InvalidOperationException("Admin bootstrap failed: "+string.Join("; ",created.Errors.Select(e=>e.Description)));
-            await users.AddToRoleAsync(user,"Admin");
+
+            if (!created.Succeeded)
+            {
+                throw new InvalidOperationException(
+                    "Admin creation failed: " +
+                    string.Join("; ", created.Errors.Select(e => e.Description)));
+            }
+            var assigned = await users.AddToRoleAsync(user, "Admin");
+            if (!assigned.Succeeded)
+            {
+                throw new InvalidOperationException(
+                    "Admin role assignment failed: " +
+                    string.Join("; ", assigned.Errors.Select(e => e.Description)));
+            }
         }
         else if(!await users.IsInRoleAsync(user,"Admin"))
         {

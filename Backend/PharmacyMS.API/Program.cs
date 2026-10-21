@@ -69,6 +69,30 @@ builder.Services.AddCors(options=>options.AddPolicy("Angular",p=>{
 }));
 
 var app=builder.Build();
+
+
+if (args.Contains("--provision-admin", StringComparer.OrdinalIgnoreCase))
+{
+    var email = app.Configuration["Bootstrap:Email"];
+    var password = app.Configuration["Bootstrap:Password"];
+
+    if (string.IsNullOrWhiteSpace(email) ||
+        string.IsNullOrWhiteSpace(password))
+    {
+        throw new InvalidOperationException(
+            "Admin provisioning requires Bootstrap:Email and Bootstrap:Password.");
+    }
+
+    await AdminBootstrap.EnsureAsync(
+        app.Services,
+        app.Configuration);
+
+    Console.WriteLine("Admin provisioning completed.");
+
+    return;
+}
+
+
 app.UseExceptionHandler();
 if(app.Environment.IsDevelopment()) {app.UseSwagger();app.UseSwaggerUI();}
 app.UseCors("Angular");
@@ -80,23 +104,11 @@ app.MapGet("/api/health",()=>Results.Ok(new{status="ok",databaseMode="EF Core Co
 app.MapGet("/api/health/ready",async(ApplicationDbContext db,CancellationToken ct)=>
     await db.Database.CanConnectAsync(ct) ? Results.Ok(new{database="ready"}) : Results.Problem("Database unavailable",statusCode:503)).AllowAnonymous();
 
-// No EnsureCreated/Migrate on startup. Use EF migrations explicitly (see SETUP_BN.md).
-//if(app.Environment.IsDevelopment())
-//    await AdminBootstrap.EnsureAsync(app.Services,app.Configuration);
-// Allow one-time Admin Bootstrap in Production only when explicitly enabled.
-var runProductionBootstrap =
-    app.Environment.IsProduction() &&
-    app.Configuration.GetValue<bool>("Bootstrap:RunOnce");
-
-if (app.Environment.IsDevelopment() || runProductionBootstrap)
+if (app.Environment.IsDevelopment())
 {
-    app.Logger.LogInformation("Admin bootstrap execution started.");
-
     await AdminBootstrap.EnsureAsync(
         app.Services,
         app.Configuration);
-
-    app.Logger.LogInformation("Admin bootstrap execution completed.");
 }
 
 app.Run();
