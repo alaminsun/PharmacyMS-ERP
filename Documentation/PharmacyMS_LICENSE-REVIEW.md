@@ -2,30 +2,51 @@
 
 **Status:** Preliminary review; **NOT cleared for commercial source-code redistribution**.
 
-**Scope:** GitHub `alaminsun/PharmacyMS-ERP`, `main` branch checked October 21, 2026. The locally modified working tree, exact restored transitive package graph, artwork/fonts, and included third-party source have **not** been fully examined. This document is not legal advice.
+**Scope:** Local PharmacyMS release candidate on `test/mediatr-12-5`, reviewed October 21, 2026. Package vulnerabilities and selected business workflows have been tested. Complete dependency licensing, third-party assets, source ownership, and distribution rights have not yet been fully audited. This document is not legal advice.
 
-## 1. High-priority issue — MediatR 14.2.0
+## 1. MediatR 12.5.0 - License and compatibility review
 
-`Backend/PharmacyMS.Application/PharmacyMS.Application.csproj` references `MediatR` version `14.2.0`. The publisher says versions **13 and later** offer an open-source route under **RPL 1.5** and a separate commercial license. RPL has reciprocal obligations; commercial licensing terms must be checked specifically for redistributing source-code products to multiple buyers. A license key or a log-warning suppression is **not** proof that redistribution is authorized.
+The final local release candidate references `MediatR` version `12.5.0` in `Backend/PharmacyMS.Application/PharmacyMS.Application.csproj`.
 
-Before listing, choose one of the following only after checking its legal consequences:
+NuGet identifies MediatR 12.5.0 as licensed under Apache License 2.0. This is a permissive license that generally permits commercial use and redistribution, subject to the applicable conditions and preservation of required notices.
 
-1. Obtain written clarification/appropriate commercial rights from Lucky Penny Software, including redistribution of the source-code product and rights/requirements for each buyer; or
-2. Review the RPL 1.5 obligations with qualified advice and determine whether they are compatible with Vibe96's Standard License and the intended business model; or
-3. Evaluate replacement with a differently licensed mediator implementation and retest the entire application.
+Official package:
+https://www.nuget.org/packages/MediatR/12.5.0
 
-Do not include or publish a third-party license key in the product ZIP. Do not claim that all dependencies are commercially cleared yet.
+License:
+https://www.apache.org/licenses/LICENSE-2.0
 
-Publisher information:
-- https://luckypennysoftware.com/faq
-- https://mediatr.io/
-- https://github.com/LuckyPennySoftware/MediatR/blob/main/LICENSE.md
+### Compatibility verification
+
+The following tests passed on the local `test/mediatr-12-5` Git branch:
+
+- ASP.NET Core Release build
+- xUnit tests: 4 passed, 0 failed
+- NuGet vulnerability audit: no known vulnerabilities reported
+- LocalDB migrations and API health checks
+- Admin provisioning and login
+- JWT authentication and Admin permissions retrieval
+- Medicines query
+- Supplier and medicine creation
+- Purchase of 10 units and stock increase to 10
+- Sale of 3 units and remaining stock verification at 7
+
+These tests support compatibility for the tested workflows. They do not establish full test coverage of every feature.
+
+### Remaining licensing work
+
+- Preserve required Apache-2.0 license and attribution notices.
+- Review all other direct and transitive dependencies.
+- Verify rights to redistribute third-party assets, templates, fonts, icons, and any included code.
+- Confirm source ownership and compatibility with the intended marketplace license.
+
+The overall commercial redistribution review remains preliminary.
 
 ## 2. Direct packages spotted in repository
 
-**.NET:** MediatR 14.2.0, FluentValidation.DependencyInjectionExtensions 12.1.1, Microsoft.EntityFrameworkCore packages 10.0.11, Microsoft.AspNetCore.Identity.EntityFrameworkCore 10.0.11, Microsoft.AspNetCore.Authentication.JwtBearer 10.0.11, Swashbuckle.AspNetCore 6.6.2, System.IdentityModel.Tokens.Jwt 8.23.0, System.Security.Cryptography.Pkcs 10.0.13.
+**.NET:** MediatR 12.5.0 (Apache-2.0), FluentValidation.DependencyInjectionExtensions 12.1.1, Microsoft.EntityFrameworkCore packages 10.0.11, ASP.NET Core Identity/JWT packages, Swashbuckle.AspNetCore 6.6.2, and other dependencies. Verify exact versions against the final restored package graph.
 
-**Angular/npm:** @angular packages 21.2.13, RxJS ~7.8.2, tslib ^2.8.1, zone.js ~0.15.1, TypeScript ~5.9.3, Angular CLI/build, Playwright test tools.
+**Angular/npm:** Angular runtime packages updated to 21.2.25, Angular CLI/build updated to 21.2.27, and Vite pinned to 7.3.7 through overrides. Verify the complete final dependency graph against package-lock.json.
 
 These are **inventories, not license approvals**. License details for direct and transitive dependencies and any bundled assets must be checked and their required notices retained.
 
@@ -58,7 +79,7 @@ Vibe96 Seller Agreement (section 5) asks sellers to have rights to distribute al
 
 ## 5. Source-code and asset clearance checklist
 
-- [ ] MediatR 14.x distribution rights and buyer licensing path resolved in writing.
+- [x] MediatR 12.5.0 Apache-2.0 package license verified; tested application workflows passed. Required redistribution notices remain under review.
 - [ ] .NET and npm direct/transitive dependency list reviewed.
 - [ ] Required third-party license texts, copyright notices, and attribution included.
 - [ ] Icons, fonts, images, UI templates, and copied code are licensed for distribution.

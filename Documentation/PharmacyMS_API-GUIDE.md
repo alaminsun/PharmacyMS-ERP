@@ -2,6 +2,7 @@
 
 **Audience:** developers and technical buyers  
 **Stack:** ASP.NET Core 10, EF Core, SQL Server, ASP.NET Core Identity, JWT, MediatR  
+**MediatR version:** 12.5.0 (Apache-2.0)
 **API base path:** `/api`  
 **Status:** Buyer-facing reference based on the controller/DTO source present on GitHub `main` as inspected on 21 October 2026. Verify against the final release source and running OpenAPI contract before publishing.
 
